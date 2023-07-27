@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --default-spacing: 0 auto 20px auto;
+  --emphasis-bg: #abb8c3;
+  --main-bg: #e5e5e5;
+  --main-text:#000;
+  --title: #0170b9;
+}
+
+body {
+  background-color: var(--main-bg);
+  color: var(--main-text);
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+  justify-content: center;
+  text-align: center;
+  width: 100vw;
+}
+
+h1 {
+  align-items: center;
+  background-color: var(--emphasis-bg);
+  color: var(--title);
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  margin: var(--default-spacing);
+  width: 100vw;
+}
+
+#questionForm {
+  align-items: start;
+  background-color: #fff;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: fit-content;
+  justify-content: space-around;
+  margin: 0 20px;
+  max-width: 480px;
+  padding: 20px;
+}
+
+#questionForm input,
+#questionForm textarea {
+  border: 1px solid var(--emphasis-bg);
+  border-radius: 8px;
+  margin: var(--default-spacing);
+  max-width: 100%;
+  min-width: 100%;
+  padding: 12px 20px;
+  width: 100%;
+}
+
+#questionForm button {
+  border: 1px solid var(--emphasis-bg);
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0 auto;
+  font-weight: 600;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+}
+
+#questionForm button:hover {
+  opacity: 0.7;
+}
+
+#questionForm button:active {
+  transform: scale(0.9);
+}
+
+#questions {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+  height: 100%;
+  margin: var(--default-spacing);
+  max-height: 960px;
+  overflow-y: scroll;
+  padding: 20px;
+}
+
+.question-container {
+  border: 2px solid var(--title);
+  border-radius: 20px;
+  margin: var(--default-spacing);
+  padding: 20px 20px 0 20px;
+  position: relative;
+  text-align: left;
+  width: 480px;
+}
+
+.question-container p {
+  margin: var(--default-spacing);
+}
+
+.question-container p:first-child {
+  font-weight: 600;
+}
+
+.delete {
+  align-items: center;
+  background-color: rgb(216, 60, 60);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  float: right;
+  height: 24px;
+  justify-content: center;
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  width: 24px;
+}
