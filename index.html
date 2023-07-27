@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <title>U-Question</title>
+  </head>
+  <body>
+    <h1>Não existe dúvida boba! Bobeira é não sanar sua dúvida!</h1>
+
+    <form id="questionForm">
+      <label for="name">Nome:</label>
+      <input type="text" id="name" required />
+      <label for="question">Dúvida:</label>
+      <textarea id="question" required></textarea>
+      <button type="submit">Enviar Dúvida</button>
+    </form>
+
+    <div id="questions">
+      <!-- Aqui serão exibidas as dúvidas -->
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      // Função para criar a div de uma pergunta
+      function createQuestionElement(question) {
+        const div = document.createElement("div");
+        div.setAttribute('class', 'question-container');
+        div.innerHTML = `<p>${question.name}:</p><p>${question.question}</p>`;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "x";
+        deleteButton.dataset.id = question.id; // Armazena o ID da pergunta no atributo "data-id"
+        deleteButton.setAttribute('class', 'delete');
+        deleteButton.addEventListener("click", () =>
+          deleteQuestion(question.id)
+        );
+
+        div.appendChild(deleteButton);
+        return div;
+      }
+
+      // Função para exibir as dúvidas
+      function renderQuestions(questions) {
+        const questionsContainer = document.getElementById("questions");
+        questionsContainer.innerHTML = "";
+
+        questions.forEach((question) => {
+          const questionElement = createQuestionElement(question);
+          questionsContainer.appendChild(questionElement);
+        });
+      }
+
+      // Evento para receber as dúvidas iniciais do servidor
+      socket.on("loadQuestions", (questions) => {
+        renderQuestions(questions);
+      });
+
+      // Evento para receber novas dúvidas do servidor e atualizar a exibição
+      socket.on("newQuestion", (question) => {
+        const questionsContainer = document.getElementById("questions");
+        const questionElement = createQuestionElement(question);
+        questionsContainer.appendChild(questionElement); // Adiciona a nova pergunta ao final da lista
+      });
+
+      // Evento para lidar com a exclusão de uma dúvida
+      socket.on("deleteQuestion", (questionId) => {
+        const questionElement = document.querySelector(
+          `[data-id="${questionId}"]`
+        );
+        if (questionElement) {
+          questionElement.parentElement.remove(); // Remove a div da pergunta excluída
+        }
+      });
+
+      // Submissão do formulário para enviar a nova dúvida
+      document
+        .getElementById("questionForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const name = document.getElementById("name").value;
+          const question = document.getElementById("question").value;
+
+          socket.emit("newQuestion", { name, question });
+
+          document.getElementById("name").value = "";
+          document.getElementById("question").value = "";
+        });
+
+      // Função para enviar o evento de exclusão ao servidor
+      function deleteQuestion(questionId) {
+        socket.emit("deleteQuestion", questionId);
+      }
+    </script>
+  </body>
+</html>
